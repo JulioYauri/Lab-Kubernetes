@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Task App</title>
+  <link rel="stylesheet" href="styles.css">
+  <script src="config.js"></script>
+</head>
+<body>
+  <div class="container">
+    <h1>Task List</h1>
+
+    <div class="input-group">
+      <input type="text" id="task-input" placeholder="Add a new task" autocomplete="off">
+      <button id="add-task">Add</button>
+    </div>
+
+    <!-- lista de tareas -->
+    <ul id="task-list" class="task-list" aria-live="polite"></ul>
+  </div>
+
+  <script>
+    const API_URL = window.APP_CONFIG.API_URL;
+
+    async function fetchTasks() {
+      try {
+        const res = await fetch(API_URL);
+        const tasks = await res.json();
+        const taskList = document.getElementById('task-list');
+        taskList.innerHTML = ''; 
+
+        tasks.forEach(task => {
+          const li = document.createElement('li');
+          li.className = 'task-item';
+
+          const span = document.createElement('span');
+          span.className = 'task-text';
+          span.textContent = task.taskName ?? '';
+
+          li.appendChild(span);
+          taskList.appendChild(li);
+        });
+      } catch (err) {
+        console.error('Error fetching tasks:', err);
+        document.getElementById('task-list').innerHTML = '';
+      }
+    }
+
+    async function addTask(taskName) {
+      try {
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ taskName })
+        });
+        if (res.ok) {
+          fetchTasks();
+        } else {
+          console.error('Error adding task (server)');
+        }
+      } catch (err) {
+        console.error('Error adding task:', err);
+      }
+    }
+
+    document.getElementById('add-task').addEventListener('click', () => {
+      const input = document.getElementById('task-input');
+      const v = input.value.trim();
+      if (!v) return;
+      addTask(v);
+      input.value = '';
+    });
+
+    document.getElementById('task-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') document.getElementById('add-task').click();
+    });
+
+    window.addEventListener('load', fetchTasks);
+  </script>
+</body>
+</html>
