@@ -1,0 +1,4 @@
+name: task-app-infrastructure
+runtime: python
+description: Infrastructure as Code for Task App on AWS EKS
+main: .
