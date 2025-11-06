@@ -1,5 +1,0 @@
-config:
-  task-app-infrastructure:mongodb-username:
-    secure: AAABAMT7QIr1o/c3ixuluk0xmaOQmbSAJU6aZyWGO8EIh68Tlg==
-  task-app-infrastructure:mongodb-password:
-    secure: AAABAD6RIyII433V3kbLhEBfak6eHctl7AqFJs81pbP+DsiT8zst1vnHig==
